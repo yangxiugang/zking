@@ -141,6 +141,7 @@ public class BillController {
         String myreturn = "error";
         if (ius.DeleteBill(bill) > 0) {
             out = "y";
+
             myreturn = "redirect:FindBillPaging.action";
         }
         try {
