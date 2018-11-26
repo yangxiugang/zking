@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--设置注解驱动-->
+    <!--<context:annotation-config></context:annotation-config>-->
+    <!--用注解注入bean并且指定查找范围-->
+    <context:component-scan base-package="com.zking.supermaket.controller"></context:component-scan>
+
+    <!--设置方法返回的前缀与后缀（springmvc包）-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!--配置所有的方法都可以不用拦截-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+
+    <!--但是，从spring3.1开始DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter的使用已经过时-->
+    <!--spring3.1开始我们应该用RequestMappingHandlerMapping 来替换DefaultAnnotationHandlerMapping，-->
+    <!--spring3.1开始我们应该用用RequestMappingHandlerAdapter 来替换AnnotationMethodHandlerAdapter-->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="mappingJackson2HttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="mappingJackson2HttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <!--处理中文乱码以及避免IE执行AJAX时，返回JSON出现下载文件-->
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>text/json;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+
+
+    <!--4) 单独处理图片、样式、js等资源 -->
+    <mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:resources location="/images/" mapping="/images/**"/>
+    <mvc:resources location="/js/" mapping="/js/**"/>
+    <!--<mvc:resources location="/jquery-easyui/" mapping="/jquery-easyui/**"/>-->
+
+
+
+    <!--&lt;!&ndash;1.配置数据库Springjdbc&ndash;&gt;-->
+    <!--<bean id="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+        <!--<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>-->
+        <!--<property name="url" value="jdbc:mysql://localhost:3306/smbms"></property>-->
+        <!--<property name="username" value="root"></property>-->
+        <!--<property name="password" value="sasa"></property>-->
+    <!--</bean>-->
+
+
+
+    <!--&lt;!&ndash;配置sqlsession的工厂(mybatid-spring包)&ndash;&gt;-->
+    <!--<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+        <!--&lt;!&ndash;指定数据源,与数据库连接&ndash;&gt;-->
+        <!--<property name="dataSource" ref="datasource"></property>-->
+        <!--&lt;!&ndash;配置mybatis的核心文件&ndash;&gt;-->
+        <!--<property name="configLocation" value="classpath:mybatis-spring.xml"></property>-->
+    <!--</bean>-->
+
+
+    <!--&lt;!&ndash;自动扫描mapper的接口并且实现接口(mybatis-spring包)&ndash;&gt;-->
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+        <!--<property name="basePackage" value="com/zking/supermaket/**/mapper"></property>-->
+        <!--<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"></property>-->
+    <!--</bean>-->
+
+
+    <!--&lt;!&ndash;配置事务处理器&ndash;&gt;-->
+    <!--<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+        <!--<property name="dataSource" ref="datasource"></property>-->
+    <!--</bean>-->
+
+
+    <!--&lt;!&ndash;开启事务注解&ndash;&gt;-->
+    <!--<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>-->
+</beans>
